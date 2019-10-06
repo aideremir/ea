@@ -1,0 +1,33 @@
+@font-face {
+    font-family: Gibson;
+    font-weight: $font-weight-normal;
+    font-style: normal;
+    font-display: swap;
+    src: url("../fonts/canada-type-gibson-regular-webfont.woff2") format("woff2"),
+    url("../fonts/canada-type-gibson-regular-webfont.woff") format("woff");
+}
+
+@font-face {
+    font-family: Gibson;
+    font-weight: $font-weight-light;
+    font-style: normal;
+    font-display: swap;
+    src: url("../fonts/canada-type-gibson-light-webfont.woff2") format("woff2"),
+    url("../fonts/canada-type-gibson-light-webfont.woff") format("woff");
+}
+
+@font-face {
+    font-family: Gibson;
+    font-weight: $font-weight-bold;
+    font-style: normal;
+    font-display: swap;
+    src: url("../fonts/canada-type-gibson-semibold-webfont.woff2") format("woff2"),
+    url("../fonts/canada-type-gibson-semibold-webfont.woff") format("woff");;
+}
+
+@font-face {
+    font-family: "VeneerClean";
+    font-weight: normal;
+    font-style: normal;
+    src: url("../fonts/yellow-design-studio-veneerclean-reg.otf") format("opentype");
+}

@@ -1,0 +1,248 @@
+@import "mixins/buttons";
+//
+// Base styles
+//
+
+.btn {
+    padding: 0;
+    display: inline-flex;
+    font-weight: $btn-font-weight;
+    border: none;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    color: inherit;
+    background-color: transparent;
+    transition: $btn-transition;
+
+    &:hover {
+        color: $link-hover-color;
+        text-decoration: $link-hover-decoration;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    // Share hover and focus styles
+    &:hover,
+    &:focus {
+        text-decoration: none;
+    }
+
+    &:focus,
+    &.focus {
+        text-decoration: $link-hover-decoration;
+        border-color: transparent;
+        box-shadow: none;
+        outline: 0;
+    }
+
+    &:disabled,
+    &.disabled {
+        opacity: $btn-disabled-opacity;
+        color: $btn-link-disabled-color;
+        pointer-events: none;
+    }
+
+    & + & {
+        margin-left: 5px;
+    }
+
+    // Opinionated: add "hand" cursor to non-disabled .btn elements
+    &:not(:disabled):not(.disabled) {
+        cursor: pointer;
+    }
+}
+
+//
+// Alternate buttons
+//
+
+@each $color, $value in $buttons {
+    .btn--#{$color} {
+        @include button-variant(nth($value, 1), nth($value, 2));
+    }
+}
+
+@each $color, $value in $buttons-outline {
+    .btn--#{$color} {
+        @include button-outline-variant(nth($value, 1), nth($value, 2), nth($value, 3));
+    }
+}
+
+//
+// Link buttons
+//
+
+// Make a button look and behave like a link
+.btn--link {
+    padding: 0;
+    text-transform: none;
+    font-weight: $font-weight-normal;
+    color: $clear-blue;
+    background-color: transparent;
+    border: none;
+
+    &:hover {
+        color: $link-hover-color;
+        text-decoration: $link-hover-decoration;
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    &:focus,
+    &.focus {
+        text-decoration: $link-hover-decoration;
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    &:disabled,
+    &.disabled {
+        color: $btn-link-disabled-color;
+        pointer-events: none;
+    }
+}
+
+//
+// Button Sizes
+//
+
+.btn--lg {
+    @include button-size($btn-padding-y-lg, $btn-padding-x-lg, $btn-font-size-lg, $btn-line-height-lg, $btn-border-radius-lg);
+}
+
+.btn--md {
+    @include button-size($btn-padding-y-md, $btn-padding-x-md, $btn-font-size-md, $btn-line-height-md, $btn-border-radius-md);
+}
+
+.btn--sm {
+    @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
+}
+
+.btn--xs {
+    @include button-size($btn-padding-y-xs, $btn-padding-x-xs, $btn-font-size-xs, $btn-line-height-xs, $btn-border-radius-xs);
+}
+
+//
+// Block button
+//
+
+.btn--block {
+    display: block;
+    width: 100%;
+
+    // Vertically space out multiple block buttons
+    & + & {
+        margin: $btn-block-spacing-y 0 0;
+    }
+}
+
+//
+// Button has icon
+//
+
+.btn--has-icon {
+    &::before {
+        margin-right: .3rem;
+        width: 1em;
+        height: 1em;
+        content: '';
+        background-size: contain;
+        display: inline-block;
+        background-repeat: no-repeat;
+        background-position: center;
+        vertical-align: text-top;
+    }
+}
+
+.btn {
+    &--play {
+        &::before {
+            background-image: url(~assets/images/play.svg);
+        }
+    }
+
+    &--gallery {
+        &::before {
+            width: 1.125em;
+            height: 1.125em;
+            background-image: url(~assets/images/imagegallery.svg);
+        }
+    }
+
+    &--playlist {
+        &::before {
+            background-image: url(~assets/images/playlist.svg);
+        }
+    }
+
+    &--favorite {
+        &::before {
+            background-image: url(~assets/images/favorite.svg);
+            @media (max-width: $md) {
+                margin: 0;
+            }
+        }
+        span {
+            @media (max-width: $md) {
+                display: none;
+            }
+        }
+    }
+
+    &--download {
+        &::before {
+            background-image: url(~assets/images/download.svg);
+        }
+    }
+
+    &--comments {
+        &::before {
+            margin: 0;
+            width: 1.125rem;
+            vertical-align: middle;
+            background-image: url(~assets/images/comments.svg);
+        }
+    }
+}
+
+//
+// Keyboard-Only Focus
+//
+
+button.btn:active:hover {
+    visibility: hidden;
+}
+
+:active:hover > .btn__content {
+    visibility: visible;
+}
+
+/* Fixing the Safari bug for `<button>`s overflow */
+.btn__content {
+    position: relative;
+}
+
+/* Restoring the default behavior for `<button>` in Fx */
+button.btn:active:not(:-moz-focusring) {
+    visibility: inherit;
+}
+
+/* Using a slightly worse method for Fx on non-focused hover */
+.btn:not(button):hover:not(:focus):not(:-moz-focusring) {
+    visibility: hidden;
+}
+
+:not(button):hover:not(:focus):not(:-moz-focusring) > .btn__content {
+    visibility: visible;
+}
+
+:focus > .btn__content {
+    outline: 5px auto -webkit-focus-ring-color;
+}
+
+/* Removing default outline only after we've added our custom one */
+.btn:focus {
+    outline: none;
+}

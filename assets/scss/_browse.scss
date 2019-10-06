@@ -1,0 +1,115 @@
+.browse {
+    padding-top: calculateRem(32px);
+
+    @media (max-width: $md) {
+        padding-top: calculateRem(24px);
+    }
+
+    .form-row {
+        margin-right: -4px;
+        margin-left: -4px;
+        & > .col,
+        & > [class*="col-"] {
+            padding-right: 4px;
+            padding-left: 4px;
+        }
+    }
+
+    label {
+        margin-bottom: 1rem;
+        @media (max-width: $md) {
+            margin-bottom: .5rem;
+        }
+    }
+
+    &__head {
+        margin-bottom: calculateRem(32px);
+        display: flex;
+        @media (max-width: $md) {
+            margin-bottom: calculateRem(24px);
+            flex-wrap: wrap;
+        }
+    }
+
+    &__filter {
+        flex: 1;
+        display: flex;
+        align-items: center;
+
+        &-item {
+            margin-left: 10px;
+            display: inline-block;
+            letter-spacing: .025rem;
+            font-size: calculateRem(12px);
+            @media (max-width: $sm) {
+                margin-left: 0;
+                margin-right: 10px;
+            }
+
+            label {
+                margin: 0;
+            }
+
+            &--reset,
+            &--show-tags {
+                @media (max-width: $md) {
+                    margin-left: auto;
+                    margin-right: 0;
+                }
+            }
+            &--reset {
+                line-height: 1.4;
+            }
+        }
+    }
+
+    &__title {
+        margin-right: 10px;
+        font-size: calculateRem(24px);
+        letter-spacing: 0.01875rem;
+        font-weight: $font-weight-normal;
+        @media (max-width: $md) {
+            font-size: calculateRem(20px);
+        }
+        @media (max-width: $sm) {
+            margin-bottom: 24px;
+        }
+    }
+
+    &__select {
+        width: 100%;
+        @media (max-width: $sm) {
+            margin-bottom: 8px;
+        }
+    }
+
+    &__filter-by {
+        margin-bottom: 1rem;
+    }
+
+    &__add-tag {
+        display: flex;
+    }
+
+    &__body {
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid $charcoal-grey;
+    }
+
+    &__footer {
+        padding: calculateRem(24px) 0;
+        @media (max-width: $md) {
+            padding: calculateRem(16px) 0 calculateRem(14px);
+        }
+    }
+
+    &__result {
+        padding: 1.5rem 0 0;
+        list-style-type: none; // reset marks for <ul> element
+        border-top: 2px solid $charcoal-grey;
+    }
+}
+
+.relative {
+    position: relative;
+}

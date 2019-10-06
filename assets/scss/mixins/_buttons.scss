@@ -1,0 +1,60 @@
+// Button variants
+//
+// Easily pump out default styles, as well as :hover, :focus, :active,
+// and disabled options for all buttons
+
+@mixin button-variant($background, $hover-background, $font-color: $white, $font-weight: $font-weight-bold, $btn-border: $btn-border-width) {
+    color: $font-color;
+    background-color: $background;
+    font-weight: $font-weight;
+    border: $btn-border-width solid transparent;
+    text-transform: uppercase;
+
+    &:hover {
+        color: $font-color;
+        background-color: $hover-background;
+    }
+
+    //&:focus,
+    //&.focus {
+    //  box-shadow: 0 0 0 $btn-focus-width rgba($border, .5);
+    //}
+
+    &.disabled,
+    &:disabled {
+        background-color: $background;
+    }
+}
+
+@mixin button-outline-variant($color, $border-color, $active-border, $color-hover: $color, $font-weight: $font-weight-normal, $btn-border: $btn-border-width) {
+    color: $color;
+    background-color: transparent;
+    background-image: none;
+    border: $btn-border solid $border-color;
+    letter-spacing: .4px;
+    font-weight: $font-weight;
+
+    &:hover {
+        color: $color-hover;
+        border-color: $active-border;
+    }
+
+    &:focus,
+    &.focus {
+        box-shadow: 0 0 0 $btn-focus-width rgba($color, .5);
+    }
+
+    &.disabled,
+    &:disabled {
+        color: $color;
+        background-color: transparent;
+    }
+}
+
+// Button sizes
+@mixin button-size($padding-y, $padding-x, $font-size, $line-height, $border-radius) {
+    padding: $padding-y $padding-x;
+    font-size: $font-size;
+    line-height: $line-height;
+    border-radius: $border-radius;
+}

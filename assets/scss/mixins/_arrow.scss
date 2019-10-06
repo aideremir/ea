@@ -1,0 +1,15 @@
+@mixin arrow($bg-color, $border-color) {
+    &:after {
+        top: -6px;
+        right: 22px;
+        content: '';
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        border-top: 1px solid $border-color;
+        border-left: 1px solid $border-color;
+        background: $bg-color;
+        transform: rotate(45deg);
+    }
+}
+

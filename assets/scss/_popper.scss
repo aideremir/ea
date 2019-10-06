@@ -1,0 +1,72 @@
+.popper {
+    margin-top: 3px;
+    background-color: $dark-two;
+    border: 1px solid $slate-grey;
+    border-radius: 2px;
+    box-shadow: none;
+    overflow: hidden;
+    z-index: $zindex-popper;
+
+    &__head {
+        padding: 6px;
+        border-bottom: 1px solid $slate-grey;
+    }
+
+    &__body {
+        &--has-scroll {
+            max-height: 200px;
+            padding-right: 11px; // looks good only on MacOs, need custom scroll plugin
+            overflow: auto;
+        }
+    }
+
+    &--no-arrow {
+        .popper__arrow {
+            display: none;
+        }
+    }
+
+    &--fluid {
+        width: 100%;
+    }
+
+    &__list {
+        padding: 0;
+        list-style: none;
+
+        li {
+            margin: 0;
+            width: 100%;
+            padding: .4375rem 1rem;
+            font-size: .9375rem;
+            line-height: 1.2;
+            letter-spacing: .025rem;
+            box-shadow: 0 1px 0 0 $charcoal-grey;
+            &:hover,
+            &.active {
+                background-color: $charcoal-grey;
+            }
+
+            @media (max-width: $sm) {
+                padding: .375rem .75rem;
+                font-size: .75rem;
+                line-height: 1.34;
+            }
+        }
+    }
+
+    &__list-item {
+        cursor: pointer;
+        &--nowrap {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &--disabled {
+            pointer-events: none;
+            opacity: $btn-disabled-opacity;
+            cursor: default;
+        }
+    }
+}

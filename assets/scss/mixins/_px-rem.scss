@@ -1,0 +1,12 @@
+@function calculateRem($size) {
+    $remSize: $size / 16px;
+    @return #{$remSize}rem;
+}
+
+@mixin fontSize($size) {
+    font-size: calculateRem($size);
+}
+
+@mixin remPadding($top, $left, $bottom, $right) {
+    padding: calculateRem($top) calculateRem($left) calculateRem($bottom) calculateRem($right);
+}

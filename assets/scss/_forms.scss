@@ -1,0 +1,329 @@
+//
+// Textual form controls
+//
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: $input-padding-y $input-padding-x;
+    font-size: $font-size-base;
+    line-height: $input-line-height;
+    color: $input-color;
+    background-color: $input-bg;
+    background-clip: padding-box;
+    border: $input-border-width solid $input-border-color;
+    border-radius: $input-border-radius;
+
+    @media (max-width: $md) {
+        padding: $input-padding-y-md $input-padding-x-md;
+        line-height: $input-line-height-md;
+    }
+
+    @media (max-width: $sm) {
+        padding: $input-padding-y-sm $input-padding-x-sm;
+        line-height: $input-line-height-sm;
+    }
+
+    &--small {
+        padding: $input-padding-y-sm $input-padding-x-sm;
+        line-height: $input-line-height-sm;
+        font-size: .875rem;
+    }
+
+    .form-dark-theme & {
+        background-color: $input-dark-bg;
+        border-color: $input-dark-border-color;
+        color: $input-dark-color;
+    }
+
+    // Unstyle the caret on `<select>`s in IE10+.
+    &::-ms-expand {
+        background-color: transparent;
+        border: 0;
+    }
+
+    // Placeholder
+    &::placeholder {
+        color: $input-placeholder-color;
+        // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
+        opacity: 1;
+
+        .form-dark-theme & {
+            color: $input-dark-placeholder-color;
+        }
+    }
+
+    // Disabled and read-only inputs
+    &:disabled,
+    &[readonly] {
+        background-color: $input-disabled-bg;
+        // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655.
+        opacity: 1;
+    }
+}
+
+select.form-control {
+    &:not([size]):not([multiple]) {
+        height: $input-height;
+    }
+
+    background-position: 100%;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg%3E%3Cpath fill='%23808993' id='a' d='M15.793 8.963L11.5 13.256 7.207 8.963a.998.998 0 0 0-1.414 0 .999.999 0 0 0 0 1.414l5.707 5.707 1.414-1.414 4.293-4.293a1 1 0 0 0-1.414-1.414z'/%3E%3C/g%3E%3C/svg%3E%0A");
+    background-size: 25px;
+    background-position-x: 90%;
+    background-color: #fff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.form-control-select {
+    background-position: 100%;
+    background-repeat: no-repeat;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCI+ICAgIDxkZWZzPiAgICAgICAgPHBhdGggaWQ9ImEiIGQ9Ik05LjQxNCAxNEw4IDEyLjU4Nmw1LjcwNy01LjcwN2ExIDEgMCAxIDEgMS40MTQgMS40MTRsLTQuMjkzIDQuMjkzIDQuMjkzIDQuMjkzYTEgMSAwIDEgMS0xLjQxNCAxLjQxNEw5LjQxNCAxNHoiLz4gICAgPC9kZWZzPiAgICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPiAgICAgICAgPHBhdGggZD0iTTAgMGgyNHYyNEgweiIvPiAgICAgICAgPG1hc2sgaWQ9ImIiIGZpbGw9IiNmZmYiPiAgICAgICAgICAgIDx1c2UgeGxpbms6aHJlZj0iI2EiLz4gICAgICAgIDwvbWFzaz4gICAgICAgIDx1c2UgZmlsbD0iIzExMTQxOCIgZmlsbC1ydWxlPSJub256ZXJvIiB0cmFuc2Zvcm09InJvdGF0ZSgtOTAgMTEuOTE0IDEyLjU4NikiIHhsaW5rOmhyZWY9IiNhIi8+ICAgICAgICA8ZyBmaWxsPSIjMTExNDE4IiBtYXNrPSJ1cmwoI2IpIj4gICAgICAgICAgICA8cGF0aCBkPSJNMCAwaDI0djI0SDB6Ii8+ICAgICAgICA8L2c+ICAgIDwvZz48L3N2Zz4=);
+    background-size: 25px;
+    background-position-x: right;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    .form-dark-theme & {
+        color: #fff;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg%3E%3Cpath fill='%23808993' id='a' d='M15.793 8.963L11.5 13.256 7.207 8.963a.998.998 0 0 0-1.414 0 .999.999 0 0 0 0 1.414l5.707 5.707 1.414-1.414 4.293-4.293a1 1 0 0 0-1.414-1.414z'/%3E%3C/g%3E%3C/svg%3E%0A");
+    }
+}
+
+// Form groups
+//
+// Designed to help with the organization and spacing of vertical forms. For
+// horizontal forms, use the predefined grid classes.
+
+.form-group {
+    margin-bottom: 1rem;
+
+    &--margin-big {
+        margin-bottom: calculateRem(24px);
+    }
+
+    &--margin-none {
+        margin-bottom: 0;
+    }
+}
+
+.form-text {
+    display: block;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: .75rem;
+    font-weight: $font-weight-light;
+    line-height: 1.33;
+    letter-spacing: .4px;
+}
+
+.form-link {
+    font-size: calculateRem(12px);
+    line-height: 1.33;
+    letter-spacing: calculateRem(0.4px);
+    color: $cool-grey;
+    cursor: pointer;
+}
+
+// Form grid
+//
+// Special replacement for our grid system's `.row` for tighter form layouts.
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -8px;
+    margin-left: -8px;
+
+    > .col,
+    > [class*="col-"] {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+}
+
+// Checkboxes and radios
+//
+// Indent the labels to position radios/checkboxes as hanging controls.
+
+.form-check {
+    position: relative;
+    display: block;
+}
+
+.form-check-input {
+    display: none;
+    &:checked + label:before {
+        border: 1px solid $bright-red;
+        background-color: $bright-red;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z'/%3E%3C/svg%3E");
+    }
+
+    &:disabled ~ .form-check-label {
+        color: grey;
+    }
+}
+
+.form-check-label {
+    margin-bottom: 0; // Override default `<label>` bottom margin
+    font-size: .75rem;
+    display: flex;
+    align-items: flex-end;
+    line-height: 1.2;
+    user-select: none;
+    letter-spacing: .025rem;
+    cursor: pointer;
+
+    &:before {
+        content: "";
+        margin-right: 4px;
+        width: 1rem;
+        min-width: 1rem;
+        height: 1rem;
+        display: inline-block;
+        vertical-align: middle;
+        background-color: #fff;
+        color: #eb222b;
+        font-weight: lighter;
+        text-align: center;
+        border-radius: 3px;
+        border: 1px solid #CFD4DB;
+        background-size: 70%;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+}
+
+.auth-form {
+    padding: calculateRem(16px);
+    width: calculateRem(396px);
+
+    &--page {
+        margin: calculateRem(72px) auto;
+    }
+
+    @media (max-width: $lg) {
+        margin: 0 auto;
+        padding-bottom: calculateRem(8px);
+        width: calculateRem(320px);
+    }
+
+    @media (max-width: $md) {
+        width: 100%;
+    }
+
+    &__header {
+        margin-bottom: calculateRem(24px);
+        font-size: calculateRem(20px);
+        font-weight: $font-weight-normal;
+        letter-spacing: calculateRem(0.2px);
+
+        .auth-form--page & {
+            text-align: center;
+        }
+
+        @media (max-width: $lg) {
+            text-align: center;
+        }
+
+        @media (max-width: $md) {
+            font-size: calculateRem(16px);
+        }
+
+        span {
+            margin-top: calculateRem(8px);
+            display: block;
+            font-size: calculateRem(15px);
+            font-weight: $font-weight-light;
+            letter-spacing: calculateRem(0.4px);
+            color: $light-grey;
+
+            @media (max-width: $lg) {
+                margin-top: calculateRem(16px);
+                font-size: calculateRem(12px);
+            }
+        }
+
+        &--login {
+            display: none;
+
+            .auth-form--page & {
+                display: block;
+            }
+
+            @media (max-width: $lg) {
+                display: block;
+            }
+        }
+    }
+
+    &__email {
+        margin-bottom: .5rem;
+    }
+
+    &__checkbox {
+        font-size: calculateRem(12px);
+        font-weight: $font-weight-light;
+        line-height: 1.33;
+        letter-spacing: calculateRem(0.4px);
+        color: $light-grey;
+        align-items: flex-start;
+
+        &--showpassword {
+            align-items: center;
+        }
+
+        &:before {
+            margin-right: calculateRem(8px);
+        }
+    }
+
+    &__label {
+        font-size: calculateRem(15px);
+        line-height: 1.2;
+        letter-spacing: calculateRem(0.4px);
+        color: $white;
+
+        @media (max-width: $md) {
+            margin-bottom: calculateRem(4px);
+            font-size: calculateRem(12px)
+        }
+    }
+
+    &__row {
+        align-items: center;
+
+        @media (max-width: $lg) {
+            flex-direction: column-reverse;
+            text-align: center;
+        }
+    }
+
+    &__col {
+        &--right {
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+
+    &__submit {
+        @media (max-width: $lg) {
+            margin-bottom: calculateRem(16px);
+            width: 100%;
+        }
+    }
+
+    &__error-message {
+        margin-bottom: calculateRem(16px);
+        padding: calculateRem(12px) calculateRem(16px);
+        border-radius: calculateRem(4px);
+        background: $dark-red;
+        font-size: calculateRem(15px);
+        line-height: 1.2;
+        letter-spacing: calculateRem(0.4px);
+        text-align: center;
+    }
+}

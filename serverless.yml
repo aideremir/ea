@@ -1,0 +1,26 @@
+service: evildistributor-nuxt
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: us-west-2
+  versionFunctions: false
+  environment:
+    NODE_ENV: production
+
+functions:
+  render:
+    handler: handler.main
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
+
+package:
+  exclude:
+    - ./**
+    - '!node_modules/**'
+  include:
+    - .nuxt/**
+    - config/app.config.js
+    - handler.js
+    - nuxt.config.js

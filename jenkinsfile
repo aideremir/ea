@@ -1,0 +1,152 @@
+/**
+ * Created by Marcos Pagnucco on 29/03/18.
+ */
+
+gitRepoUrl = 'git@github.com:adamgrayson31/frontend-components.git'
+gitCredentialId = '345d4007-43ad-401a-b1d3-aefd46604622'
+ecrHost = '548355647590.dkr.ecr.us-west-2.amazonaws.com'
+
+def file
+
+node {
+    try {
+        notifyBuild('STARTED')
+
+        stage ('Checkout application code') {
+            git branch: params.selectedBranch,
+                credentialsId: gitCredentialId,
+                url: gitRepoUrl
+                lastChanges since: 'LAST_SUCCESSFUL_BUILD', format:'SIDE',matching: 'LINE'
+        }
+
+        file = new File('app.config-new.js')
+
+        stage ('Get parameters from Parameter Store') {
+           sh "echo 'module.exports = {' > app.config-base.js"
+           sh "aws ssm describe-parameters --filters Key=Type,Values=String|jq -r  '[ .Parameters[] | .Name ]' | grep /blackmailed/${params.environment}/frontend/ > parameter-list.txt"
+           sh '''cat parameter-list.txt | tr -d '[],"'|awk '{print $1}'|grep -v '^$'  > parameter-list-clean.txt'''
+           retrieveParams()
+        }
+
+        stage ('Get secrets from Parameter Store') {
+            sh "aws ssm describe-parameters --filters Key=Type,Values=SecureString| jq -r  '[ .Parameters[] | .Name ]' | grep /blackmailed/${params.environment}/frontend/ > secret-list.txt"
+            sh '''cat secret-list.txt | tr -d '[],"'|awk '{print $1}'|grep -v '^$'  > secret-list-clean.txt'''
+            retrieveSecrets()
+            sh "sed -i -e '\$ s/.\$//' ${WORKSPACE}/app.config-new.js"
+            sh "sed -i -e 's/^/    /' ${env.WORKSPACE}/app.config-new.js"
+            sh "cat app.config-new.js >> app.config-base.js"
+            sh "echo '\n};' >> app.config-base.js"
+        }
+
+        stage ('Copy config file') {
+            sh "cp -p $WORKSPACE/app.config-base.js ${WORKSPACE}/blackmailed.com/main/config/app.config.js"
+        }
+
+
+        stage ('Build docker image') {
+          //docker.build("ssr-bm:${BUILD_NUMBER}", "--no-cache=true -f ${WORKSPACE}/blackmailed.com/main/Dockerfile ${WORKSPACE}/blackmailed.com/main")
+          def customImage = docker.build("ssr-bm:${BUILD_NUMBER}", "--no-cache=true -f ${WORKSPACE}/blackmailed.com/main/Dockerfile .")
+          sh 'mkdir $WORKSPACE/upload_to_cdn'
+          customImage.inside('-v $WORKSPACE/upload_to_cdn:/output -u root') {
+            sh 'cp -rp /app/blackmailed.com/main/.nuxt/dist/. /output/'
+          }
+          sh 'sudo chown -R jenkins:jenkins $WORKSPACE/upload_to_cdn'
+        }
+
+        stage ('Sync statics to s3') {
+          sh "aws s3 sync upload_to_cdn/ s3://blackmailed-statics/${params.environment}"
+        }
+
+        stage ('push image to ECR') {
+            docker.withRegistry("https://${ecrHost}", "ecr:us-west-2:jenkins-aws") {
+                docker.image('ssr-bm:${BUILD_NUMBER}').push("${params.environment}-${BUILD_NUMBER}")
+            }
+        }
+
+        stage('Archive data for Spinnaker use') {
+            sh "echo TAG=${params.environment}-${env.BUILD_NUMBER} > build.properties"
+            sh "echo BUILD_NUMBER=${env.BUILD_NUMBER} >> build.properties"
+            archiveArtifacts 'build.properties'
+        }
+
+    } catch (e) {
+        // If there was an exception thrown, the build failed
+        currentBuild.result = "FAILED"
+        throw e as Throwable
+
+    } finally {
+        // Success or failure, always send notifications
+        cleanup()
+        notifyBuild(currentBuild.result)
+    }
+}
+
+def notifyBuild(String buildStatus = 'STARTED') {
+    // build status of null means successful
+    buildStatus = buildStatus ?: 'SUCCESS'
+
+    // Default values
+    def colorCode
+    def subject = "${buildStatus}: Job ${env.JOB_NAME} <${env.BUILD_URL}|#${env.BUILD_NUMBER}>"
+    def summary = "${subject}"
+
+    // Override default values based on build status
+    if (buildStatus == 'STARTED') {
+        colorCode = '#3C8FD3'
+        summary = "${subject}. <${env.BUILD_URL}last-changes/|Last Changes>"
+    } else if (buildStatus == 'SUCCESS') {
+        colorCode = '#A9D071'
+    } else {
+        colorCode = '#dc3545'
+    }
+
+    // Send notifications
+    slackSend (color: colorCode, message: summary)
+}
+
+def retrieveParams() {
+  sh "> app.config-new.js"
+  def file = new File("${env.WORKSPACE}/parameter-list-clean.txt")
+  def lines = file.readLines()
+
+  lines.each { String line ->
+    NAME = sh (
+      script: "aws ssm get-parameter --name ${line} --output=text |awk '{print \$2}'|cut -d'/' -f5",
+      returnStdout: true
+    ).trim()
+    VALUE = sh (
+      script: "aws ssm get-parameter --name ${line} --output=text |awk '{print \$4}'",
+      returnStdout: true
+    ).trim()
+
+    def readContent = readFile 'app.config-new.js'
+    writeFile file: 'app.config-new.js', text: readContent+"\n${NAME}: '${VALUE}',"
+
+  }
+}
+
+def cleanup() {
+    sh "docker container prune -f || true"
+    sh "docker rmi -f ssr-bm:${env.BUILD_NUMBER} || true"
+    sh "docker rmi -f ${ecrHost}/ssr-bm:${params.environment}-${env.BUILD_NUMBER} || true"
+    sh 'rm -rf $WORKSPACE/upload_to_cdn'
+}
+
+def retrieveSecrets() {
+  def file = new File("${env.WORKSPACE}/secret-list-clean.txt")
+  def lines = file.readLines()
+
+  lines.each { String line ->
+    NAME = sh (
+      script: "aws ssm get-parameter --name ${line} --output=text |awk '{print \$2}'|cut -d'/' -f5",
+      returnStdout: true
+    ).trim()
+    VALUE = sh (
+      script: "aws ssm get-parameter --name ${line} --output=text --with-decryption|awk '{print \$4}'",
+      returnStdout: true
+    ).trim()
+
+    def readContent = readFile 'app.config-new.js'
+    writeFile file: 'app.config-new.js', text: readContent+"\n${NAME}: '${VALUE}',"
+  }
+}
