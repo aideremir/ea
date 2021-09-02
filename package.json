@@ -7,7 +7,7 @@
         "link-ea-components": "cd ../../shared && npm link && cd ../evilangel.com/main && npm link ea-components"
     },
     "dependencies": {
-        "axios": "^0.18.0",
+        "axios": "^0.21.1",
         "cookie": "^0.3.1",
         "date-fns": "^1.29.0",
         "express": "^4.16.3",
